@@ -1,6 +1,5 @@
-from pathlib import Path
-from fastapi import File, Form, Response, Request
-from modal import Image, Mount, Stub, gpu, web_endpoint, build, enter, method
+from fastapi import Response, Request
+from modal import Image, Stub, gpu, web_endpoint, build, enter
 
 inference_image = Image.debian_slim().pip_install(
     "Pillow~=10.1.0",

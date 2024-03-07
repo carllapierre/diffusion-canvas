@@ -4,6 +4,7 @@ import Slider from '@material-ui/core/Slider';
 import confetti from 'canvas-confetti';
 import './App.css'; 
 import CrossFade from 'react-crossfade-image';
+import Mesh from './Mesh';
 
 
 const colors = ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#BABAFF', '#FFBAF4', '#FFBAB3', '#D3D3D3'];
@@ -11,7 +12,8 @@ const panel = { border: '3px solid #ddd', borderRadius: '10px', backgroundColor:
 const main = 'rgb(63 53 75)';
 const size = 512;
 const refreshRate = 2000;
-const url = process.env.REACT_APP_INFERCENCE_ENDPOINT;
+const sdxltEndpoint = process.env.REACT_APP_SDXLT_ENDPOINT;
+const tripoEndpoint = process.env.REACT_APP_TRIPO_ENDPOINT;
 
 const ColorPicker = ({ setColor, selectedColor }) => {
   return (
@@ -34,7 +36,6 @@ const ColorPicker = ({ setColor, selectedColor }) => {
   );
 };
 
-
 function App() {
   
 	const canvasRef = useRef(null);
@@ -45,6 +46,7 @@ function App() {
 	const [isDrawing, setIsDrawing] = useState(false);
 	const [imageSrc, setImageSrc] = useState(null);
 	const [previousCanvasState, setPreviousCanvasState] = useState(null);
+	const [mesh, setMesh] = useState(null);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -79,14 +81,14 @@ function App() {
         const currentCanvasState = canvasRef.current.toDataURL();
 
         if (previousCanvasState && currentCanvasState !== previousCanvasState) {
-            runInference();
+            runImageGenInference();
         }
 
         setPreviousCanvasState(currentCanvasState);
     };
 
-	const runInference = () => {
-		const prompt = "3d render of a " + textPrompt;
+	const runImageGenInference = () => {
+		const prompt = "3d render of " + textPrompt;
 	
 		const imageDataUrl = canvasRef.current.toDataURL();
 	
@@ -96,7 +98,7 @@ function App() {
 			num_iterations: 5
 		});
 	
-		fetch(url, {
+		fetch(sdxltEndpoint, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -107,6 +109,33 @@ function App() {
 		.then(blob => {
 			let url = URL.createObjectURL(blob);
 			updateImage(url);
+		})
+		.catch((error) => {
+			console.error('Error:', error);
+		});
+	}
+
+	const run3DInference = () => {
+	
+		const imageDataUrl = canvasRef.current.toDataURL();
+	
+		let data = JSON.stringify({
+			image: imageDataUrl, 
+		});
+	
+		fetch(tripoEndpoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json', 
+			},
+			body: data
+		})
+		.then(response => response.blob())
+		.then(blob => {
+			let url = URL.createObjectURL(blob);
+			setMesh(url);
+
+			launchConfetti();
 		})
 		.catch((error) => {
 			console.error('Error:', error);
@@ -148,6 +177,7 @@ function App() {
 		setDefault();
 		updateImage(null);
 		launchConfetti();
+		setMesh();
 	};
 
 	function loadImageOnCanvas() {
@@ -165,7 +195,7 @@ function App() {
 		setImageSrc(newImageUrl);
     }
   
-	return (
+	return ( 
 		<div style={{
 			display: 'flex',
 			justifyContent: 'center',
@@ -204,6 +234,10 @@ function App() {
 						<Button style={{backgroundColor: main}} variant="contained" color="primary" onClick={loadImageOnCanvas}>
 							Transfer
 						</Button>
+
+						<Button style={{backgroundColor: main}} variant="contained" color="primary" onClick={run3DInference}>
+							Make it 3D
+						</Button>
 					</div>
 				</div>
 				
@@ -216,7 +250,10 @@ function App() {
 				/>
 
 				<div className='image-container' style={{ ...panel, width: size, height: size }}>
-					<CrossFade src={imageSrc} duration={400} timingFunction="ease-in-out" delay={0} alt="Original Image" />
+					{mesh ? 
+						<Mesh meshUrl={mesh} /> : 
+						<CrossFade src={imageSrc} duration={400} timingFunction="ease-in-out" delay={0} alt="Original Image" /> 
+					}
 				</div>
 			</div>
 			
