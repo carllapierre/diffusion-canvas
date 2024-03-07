@@ -11,7 +11,7 @@ const colors = ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#BABAFF'
 const panel = { border: '3px solid #ddd', borderRadius: '10px', backgroundColor: '#fff'};
 const main = 'rgb(63 53 75)';
 const size = 512;
-const refreshRate = 2000;
+const refreshRate = 600;
 const sdxltEndpoint = process.env.REACT_APP_SDXLT_ENDPOINT;
 const tripoEndpoint = process.env.REACT_APP_TRIPO_ENDPOINT;
 
@@ -88,14 +88,14 @@ function App() {
     };
 
 	const runImageGenInference = () => {
-		const prompt = "3d render of " + textPrompt;
+		const prompt = "3D Render of " + textPrompt;
 	
 		const imageDataUrl = canvasRef.current.toDataURL();
 	
 		let data = JSON.stringify({
 			image: imageDataUrl, 
 			prompt: prompt,
-			num_iterations: 5
+			num_iterations: 2
 		});
 	
 		fetch(sdxltEndpoint, {
@@ -177,7 +177,7 @@ function App() {
 		setDefault();
 		updateImage(null);
 		launchConfetti();
-		setMesh();
+		setMesh(null);
 	};
 
 	function loadImageOnCanvas() {

@@ -17,7 +17,7 @@ export default function Mesh({ meshUrl }) {
         renderer.setSize(512, 512);
         divRef.current.appendChild(renderer.domElement);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 4);
         scene.add(ambientLight);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -44,7 +44,7 @@ export default function Mesh({ meshUrl }) {
         animate();
 
         return () => {
-            if (divRef.current.contains(renderer.domElement)) {
+            if (divRef.current && divRef.current.contains(renderer.domElement)) {
                 divRef.current.removeChild(renderer.domElement);
             }
         };

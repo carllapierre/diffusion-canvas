@@ -1,6 +1,6 @@
-from fastapi import Response, Request
+from fastapi import Request
 from fastapi.responses import FileResponse
-from modal import Image, Mount, Stub, gpu, web_endpoint, build, enter, method
+from modal import Image, Stub, gpu, web_endpoint, build, enter, method
 
 inference_image = Image.debian_slim().apt_install(
         "git"
@@ -23,14 +23,11 @@ with inference_image.imports():
     import sys
     sys.path.append('/root/TripoSR') 
     from tsr.system import TSR
-    from tsr.utils import remove_background, resize_foreground, save_video
+    from tsr.utils import remove_background, resize_foreground
 
 @stub.cls(gpu=gpu.A10G(), container_idle_timeout=240)
 class Model:
-    # @build()
-    # def download_models(self):
-    
-
+    @build()
     @enter()
     def enter(self):
         self.model = TSR.from_pretrained(
