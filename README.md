@@ -23,7 +23,7 @@ modal setup
 
 ### Launch
 
-Serve modal endpoints and save endpoints
+Serve modal endpoints and save endpoints outputs for frontend .env 
 
 ```shell
 modal serve turbo.py
