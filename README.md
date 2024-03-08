@@ -1,3 +1,8 @@
+
+<div align="center">
+  <img src="assets/demo.gif" alt="Demo">
+</div>
+
 # Diffusion Canvas
 
 [SDXL Turbo](https://huggingface.co/stabilityai/sdxl-turbo) and [Modal](https://modal.com/) powered realtime image generation via canvas drawings. 
