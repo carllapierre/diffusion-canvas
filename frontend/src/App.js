@@ -11,7 +11,7 @@ const colors = ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#BABAFF'
 const panel = { border: '3px solid #ddd', borderRadius: '10px', backgroundColor: '#fff'};
 const main = 'rgb(63 53 75)';
 const size = 512;
-const refreshRate = 600;
+const refreshRate = 500;
 const sdxltEndpoint = process.env.REACT_APP_SDXLT_ENDPOINT;
 const tripoEndpoint = process.env.REACT_APP_TRIPO_ENDPOINT;
 
@@ -88,7 +88,7 @@ function App() {
     };
 
 	const runImageGenInference = () => {
-		const prompt = "3D Render of " + textPrompt;
+		const prompt = "3D model of " + textPrompt;
 	
 		const imageDataUrl = canvasRef.current.toDataURL();
 	

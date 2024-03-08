@@ -21,6 +21,7 @@ with inference_image.imports():
     import base64
     from io import BytesIO
     import sys
+    from huggingface_hub import snapshot_download
     sys.path.append('/root/TripoSR') 
     from tsr.system import TSR
     from tsr.utils import remove_background, resize_foreground
@@ -28,6 +29,9 @@ with inference_image.imports():
 @stub.cls(gpu=gpu.A10G(), container_idle_timeout=240)
 class Model:
     @build()
+    def download_models(self):
+        snapshot_download("stabilityai/TripoSR")
+    
     @enter()
     def enter(self):
         self.model = TSR.from_pretrained(
