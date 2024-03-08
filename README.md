@@ -1,13 +1,14 @@
 # Diffusion Canvas
 
-[SDXL Turbo](https://huggingface.co/stabilityai/sdxl-turbo) and [Modal](https://modal.com/) powered realtime image generation via canvas drawings. 
+[SDXL Turbo](https://huggingface.co/stabilityai/sdxl-turbo), and [TripoSR](https://huggingface.co/stabilityai/TripoSR), [Modal](https://modal.com/) powered realtime image to 3d generation via canvas drawings. 
 
 ## Local Developement
 
 ### File structure
 
 - [frontend](./frontend) - React frontend
-- [turbo.py](./turbo.py) - Serverless FastAPI endpoint for served by Modal
+- [turbo.py](./turbo.py) - Serverless FastAPI endpoint for served by Modal for SDXL Turbo
+- [tripo.py](./tripo.py) - Serverless FastAPI endpoint for served by Modal for TripoSR
 
 ### Requirements
 
@@ -22,19 +23,22 @@ modal setup
 
 ### Launch
 
-Serve modal endpoint and retrieve endpoint
+Serve modal endpoints and save endpoints
 
 ```shell
 modal serve turbo.py
 ```
+```shell
+modal serve tripo.py
+```
 
-Copy the endpoint from the serve output.  `cd` into the `frontend` directory and make a copy of .env example:
+Copy the endpoints from the serve output.  `cd` into the `frontend` directory and make a copy of .env example:
 
 ```shell
 cp example.env .env
 ```
 
-Setup endpoint from serce output in .env file and run the app. 
+Setup endpoints from serve output in .env file and run the app. 
 
 ```shell
 npm install
